@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import bcrypt from 'bcrypt'
 
 import db from '@/lib/db'
-import Users from '@/models/User'
+import User from '@/models/user'
 import sendError from '@/utils/sendError'
 
 export async function POST(req, { params }) {
@@ -10,12 +10,12 @@ export async function POST(req, { params }) {
     await await db.connect()
     const { name, email, password } = await req.json()
 
-    const user = await Users.findOne({ email })
+    const user = await User.findOne({ email })
 
     if (user) return sendError(400, '该账户已存在')
 
     const hashPassword = await bcrypt.hash(password, 12)
-    const newUser = new Users({ name, email, password: hashPassword })
+    const newUser = new User({ name, email, password: hashPassword })
     await newUser.save()
     await db.disconnect()
 

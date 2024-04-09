@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import bcrypt from 'bcrypt'
 
 import db from '@/lib/db'
-import Users from '@/models/User'
+import User from '@/models/user'
 import sendError from '@/utils/sendError'
 import { createAccessToken, createRefreshToken } from '@/utils/generateToken'
 
@@ -11,7 +11,7 @@ export async function POST(req) {
     await db.connect()
     const { email, password } = await req.json()
 
-    const user = await Users.findOne({ email })
+    const user = await User.findOne({ email })
 
     if (!user) return sendError(400, '找不到此电子邮件的应用程序')
 
