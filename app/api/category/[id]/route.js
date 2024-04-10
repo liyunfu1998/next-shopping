@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import Category from '@/models/category'
+import Category from '@/models/Category'
 import auth from '@/middleware/auth'
 import db from '@/lib/db'
 import sendError from '@/utils/sendError'

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import Order from '@/models/order'
+import Order from '@/models/Order'
 import auth from '@/middleware/auth'
 import db from '@/lib/db'
 import sendError from '@/utils/sendError'

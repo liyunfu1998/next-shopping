@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import sendError from '@/utils/sendError'
-import Product from '@/models/product'
+import Product from '@/models/Product'
 import auth from '@/middleware/auth'
 import db from '@/lib/db'
 

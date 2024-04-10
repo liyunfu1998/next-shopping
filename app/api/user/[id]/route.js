@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import db from '@/lib/db'
-import User from '@/models/user'
+import User from '@/models/User'
 import auth from '@/middleware/auth'
 import sendError from '@/utils/sendError'
 
