@@ -8,10 +8,12 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useDispatch } from 'react-redux'
+import { useRouter } from 'next/navigation'
 
 import { usePostDataMutation } from '@/store/slices/fetchApiSlice'
 import { userLogin } from '@/store/slices/authSlice'
 import { DisplayError, Loading } from '@/components'
+import alert, { confirmAlert } from '@/utils/alert'
 
 const schema = z
   .object({
@@ -43,6 +45,7 @@ const schema = z
 
 export default function RegisterPage() {
   const dispatch = useDispatch()
+  const router = useRouter()
 
   const [postData, { data, isSuccess, isError, isLoading, error }] = usePostDataMutation()
 
@@ -57,12 +60,22 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success('注册成功')
+      //      toast.success('注册成功')
+      alert('success', data.msg)
       dispatch(userLogin(data.data))
       reset()
+      router.push('/')
     }
     if (isError) {
-      toast.error(error?.data?.err)
+      confirmAlert({
+        title: '您的注册有问题',
+        text: error?.data?.err,
+        icon: 'warning',
+        confirmButtonText: '去登录',
+      }).then(result => {
+        if (result.isConfirmed) router.push('/login')
+      })
+      //      toast.error(error?.data?.err)
     }
   }, [isSuccess, isError])
 
