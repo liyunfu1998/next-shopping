@@ -5,7 +5,8 @@ const nextConfig = {
       process.env.NODE_ENV === 'production'
         ? 'https://shopping.liyunfu.tech'
         : 'http://localhost:3000',
-    MONGODB_URL: 'mongodb://root:123456@47.99.147.11:27017/next-shopping?authSource=admin',
+    MONGODB_URL:
+      'mongodb+srv://liyunfu1998:lyf19980216@cluster0.cklgsyb.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
     ACCESS_TOKEN_SECRET: '1233211234567890',
     REFRESH_TOKEN_SECRET: '987654321',
   },
