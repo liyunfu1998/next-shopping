@@ -1,15 +1,12 @@
-import Link from 'next/link'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { useState } from 'react'
 
-import { Icons } from './index'
-import { userLogout } from '../store/slices/authSlice'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { BoxLink, Icons, Logout } from './index'
 
 export default function User() {
   const { user } = useSelector(state => state.auth)
-
-  const dispatch = useDispatch()
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -40,29 +37,21 @@ export default function User() {
         </Link>
       </div>
       <div
-        className={`hidden lg:relative lg:flex lg:rounded lg:p-1.5 lg:transition ${isOpen && 'bg-red-100'}`}
+        className={`hidden lg:cursor-pointer lg:relative lg:flex lg:rounded lg:p-1.5 lg:transition ${isOpen && 'bg-red-100'}`}
         onClick={() => setIsOpen(!isOpen)}
       >
         <Icons.User className="icon" />
         <Icons.ArrowDown className="icon" />
         <div
-          className={`bg-white shadow-md px-3 py-2 absolute top-full left-0 w-56 border border-gray-100 space-y-3 ${
-            isOpen ? 'block' : 'hidden'
-          }`}
+          className={` bg-white shadow-md rounded overflow-hidden absolute top-full left-0 w-60
+                   border border-gray-100 ${isOpen ? 'block' : 'hidden'}`}
         >
-          <Link href="/profile" passHref>
-            <span className="flex items-center py-3 border-b border-gray-200 gap-x-2">
-              <div className="realative w-6 h-6">
-                <Image src={'/avatar.png'} alt="user" width={200} height={200} />
-              </div>
-              <span className="min-w-max">{user.name}</span>
-              <Icons.ArrowLeft className="icon mr-auto" />
-            </span>
-          </Link>
-          <button className="flex items-center py-3 gap-x-2" onClick={() => dispatch(userLogout())}>
-            <Icons.Logout className="icon" />
-            注销用户账号
-          </button>
+          <BoxLink path="/profile" name={user.name} className="border-t-0">
+            <div className="realative w-6 h-6">
+              <Image src={'/avatar.png'} alt="user" width={200} height={200} />
+            </div>
+          </BoxLink>
+          <Logout />
         </div>
       </div>
     </>
