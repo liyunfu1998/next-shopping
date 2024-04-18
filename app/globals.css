@@ -3,75 +3,84 @@
 @tailwind utilities;
 
 @layer base {
+  input {
+    box-shadow: 0 0 0px 1000px #fafafa inset;
+    -webkit-box-shadow: 0 0 0px 1000px #fafafa inset;
+  }
 
-    input {
-        box-shadow: 0 0 0px 1000px #fafafa inset;
-        -webkit-box-shadow: 0 0 0px 1000px #fafafa inset;
-    }
+  h2 {
+    @apply text-xl;
+  }
 
-    h2 {
-        @apply text-xl;
-    }
+  p {
+    @apply text-base;
+  }
 
-    p {
-        @apply text-base;
-    }
+  button {
+    @apply cursor-pointer;
+  }
 
-    button {
-        @apply cursor-pointer;
-    }
+  a {
+    @apply cursor-pointer;
+  }
 
-    a {
-        @apply cursor-pointer;
-    }
+  button {
+    @apply cursor-pointer;
+  }
 
-    button {
-        @apply cursor-pointer;
-    }
+  a {
+    @apply cursor-pointer;
+  }
 
-    a {
-        @apply cursor-pointer;
-    }
+  button {
+    @apply cursor-pointer;
+  }
 
-    button {
-        @apply cursor-pointer;
-    }
+  a {
+    @apply cursor-pointer;
+  }
 
-    a {
-        @apply cursor-pointer;
-    }
+  button {
+    @apply cursor-pointer;
+  }
 
-    button {
-        @apply cursor-pointer;
-    }
-
-    a {
-        @apply cursor-pointer;
-    }
+  a {
+    @apply cursor-pointer;
+  }
 }
 
 @layer components {
-    .input {
-        @apply bg-zinc-50 w-full block
+  .input {
+    @apply bg-zinc-50 w-full block
         outline-none py-2 px-3 rounded-md
         text-base lg:text-lg
         border border-gray-200
         focus:border-blue-600 transition-colors;
-    }
+  }
 
-    .error-msg {
-        @apply mt-1.5 inline-flex gap-x-1 justify-center items-center text-sm text-red-600;
-    }
+  .error-msg {
+    @apply mt-1.5 inline-flex gap-x-1 justify-center items-center text-sm text-red-600;
+  }
 
-    .btn {
-        @apply text-white bg-red-500 py-3 px-4 rounded-3xl block outline-none;
-    }
+  .btn {
+    @apply text-white bg-red-500 py-3 px-4 rounded-3xl block outline-none;
+  }
 
-    .icon {
-        @apply w-6 h-6 text-gray-700;
-    }
+  .icon {
+    @apply w-6 h-6 text-gray-700;
+  }
 
-    .b {
-        @apply border border-red-600;
-    }
+  .order-badge {
+    @apply bottom-0 left-1 bg-slate-200 p-1 rounded-md w-6 h-6 text-center text-sm text-black/80 lg:hidden;
+  }
+  .section-divide-y {
+    @apply h-3 bg-gray-200 lg:hidden;
+  }
+
+  .section-divide-x {
+    @apply w-0.5 bg-gray-200;
+  }
+  .b {
+    @apply border border-red-600;
+  }
 }

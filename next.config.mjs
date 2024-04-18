@@ -10,6 +10,16 @@ const nextConfig = {
     ACCESS_TOKEN_SECRET: '1233211234567890',
     REFRESH_TOKEN_SECRET: '987654321',
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.pexels.com',
+        port: '',
+        pathname: '/photos/**',
+      },
+    ],
+  },
 }
 
 export default nextConfig
