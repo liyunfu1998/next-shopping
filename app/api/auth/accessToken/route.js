@@ -33,6 +33,8 @@ const accessToken = async req => {
           role: user.role,
           avatar: user.avatar,
           root: user.root,
+          mobile: user.mobile,
+          address: user.address,
         },
       },
       { statue: 200 }
