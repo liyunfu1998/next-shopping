@@ -11,9 +11,6 @@ export default function useRefreshToken() {
   const dispatch = useDispatch()
   let refreshToken = Cookies.get('refreshToken')
 
-  if (refreshToken) {
-    refreshToken = JSON.parse(refreshToken)
-  }
   console.log('refreshToken', refreshToken, typeof refreshToken, !refreshToken)
   const { data, isSuccess, isLoading, isError, error } = useGetDataQuery(
     {

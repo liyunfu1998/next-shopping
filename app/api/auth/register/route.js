@@ -9,14 +9,14 @@ import { createAccessToken, createRefreshToken } from '@/utils/generateToken'
 export async function POST(req, { params }) {
   try {
     await await db.connect()
-    const { name, email, password } = await req.json()
+    const { name, email, password, address, mobile } = await req.json()
 
     const user = await User.findOne({ email })
 
     if (user) return sendError(400, '该账户已存在')
 
     const hashPassword = await bcrypt.hash(password, 12)
-    const newUser = new User({ name, email, password: hashPassword })
+    const newUser = new User({ name, email, password: hashPassword, address, mobile })
     await newUser.save()
     await db.disconnect()
 
@@ -35,6 +35,8 @@ export async function POST(req, { params }) {
             role: newUser.role,
             avatar: newUser.avatar,
             root: newUser.root,
+            mobile: newUser.mobile,
+            address: newUser.address,
           },
         },
       },

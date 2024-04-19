@@ -8,9 +8,10 @@ import { createAccessToken } from '@/utils/generateToken'
 
 const accessToken = async req => {
   try {
-    let { value: rf_token } = req.cookies.get('refreshToken')
+    const { value: rf_token } = req.cookies.get('refreshToken')
+
     if (!rf_token) return sendError(400, '无刷新token')
-    rf_token = JSON.parse(rf_token)
+
     const result = jwt.verify(rf_token, process.env.REFRESH_TOKEN_SECRET)
 
     if (!result) return sendError(400, '刷新登录异常')

@@ -14,7 +14,7 @@ const authSlice = createSlice({
       state.token = token
       state.user = user
       Cookies.set('userInfo', JSON.stringify({ token, user }))
-      Cookies.set('refreshToken', JSON.stringify(refresh_token || ''), { expires: 7 })
+      Cookies.set('refreshToken', refresh_token, { expires: 7 })
     },
 
     userLogout: (state, action) => {
@@ -23,9 +23,14 @@ const authSlice = createSlice({
       state.token = null
       state.user = null
     },
+
+    updateUser: (state, action) => {
+      state.user = action.payload
+      Cookies.set('userInfo', JSON.stringify({ token: state.token, user: action.payload }))
+    },
   },
 })
 
-export const { userLogin, userLogout } = authSlice.actions
+export const { userLogin, userLogout, updateUser } = authSlice.actions
 
 export default authSlice.reducer

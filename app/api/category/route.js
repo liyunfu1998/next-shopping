@@ -31,7 +31,6 @@ const createCategory = auth(async req => {
 
     return NextResponse.json({ msg: '创建分类成功' }, { status: 200 })
   } catch (error) {
-    console.log('error', error)
     return sendError(500, error.message)
   }
 })
