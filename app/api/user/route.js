@@ -7,7 +7,7 @@ import sendError from '@/utils/sendError'
 
 const uploadInfo = auth(async req => {
   try {
-    const { id: userId } = JSON.parse(req.headers.get('userinfo'))
+    const { id: userId } = JSON.parse(req.headers.get('userInfo'))
     const result = await req.json()
 
     await db.connect()
@@ -25,6 +25,7 @@ const uploadInfo = auth(async req => {
           email: newUser.email,
           role: newUser.role,
           root: newUser.root,
+          address: newUser.address,
         },
       },
       {
