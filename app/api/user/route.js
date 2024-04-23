@@ -1,63 +1,35 @@
-import { NextResponse } from 'next/server'
+import z from 'zod'
 
-import db from '@/lib/db'
-import User from '@/models/User'
-import auth from '@/middleware/auth'
-import sendError from '@/utils/sendError'
+import { userRepo } from '@/helpers'
+import { apiHandler, setJson } from '@/helpers/api'
 
-const uploadInfo = auth(async req => {
-  try {
-    const { id: userId } = JSON.parse(req.headers.get('userInfo'))
-    const result = await req.json()
-
-    await db.connect()
-    await User.findByIdAndUpdate({ _id: userId }, { ...result })
-    const newUser = await User.findOne({ _id: userId })
-    await db.disconnect()
-
-    return NextResponse.json(
-      {
-        msg: '已成功更新用户信息',
-        user: {
-          avatar: newUser.avatar,
-          name: newUser.name,
-          mobile: newUser.mobile,
-          email: newUser.email,
-          role: newUser.role,
-          root: newUser.root,
-          address: newUser.address,
-        },
-      },
-      {
-        status: 201,
-      }
-    )
-  } catch (error) {
-    return sendError(500, error.message)
+const getUsers = apiHandler(
+  async req => {
+    const result = await userRepo.getAll()
+    return setJson({
+      data: result,
+    })
+  },
+  {
+    identity: 'admin',
   }
-})
+)
 
-const getUsers = auth(async req => {
-  try {
-    const role = req.headers.get('userRole')
-    if (role !== 'admin') return sendError(400, '无权操作')
-
-    await db.connect()
-    const users = await User.find().select('-password')
-    await db.disconnect()
-
-    return NextResponse.json(
-      {
-        users,
-      },
-      {
-        status: 200,
-      }
-    )
-  } catch (error) {
-    return sendError(500, error.message)
+const updateInfo = apiHandler(
+  async req => {
+    const userId = req.headers.get('userId')
+    const body = await req.json()
+    const result = await userRepo.update(userId, body)
+    return setJson({
+      data: result,
+    })
+  },
+  {
+    schema: z.object({
+      name: z.string(),
+    }),
   }
-})
+)
 
-export const PATCH = uploadInfo
 export const GET = getUsers
+export const PATCH = updateInfo

@@ -1,11 +1,10 @@
-export default async function validateMiddleware(req, schema) {
+export async function validateMiddleware(req, schema) {
   if (!schema) return
 
   const body = await req.json()
   const { error, data } = schema.safeParse(body)
-
-  if (error) {
-    throw `Validation error: ${error.details.map(x => x.message).join(', ')}`
+  if (error?.errors) {
+    throw `Validation error: ${error?.errors?.map(x => `${x.path?.[0]}:${x.message}`).join(', ')}`
   }
 
   // update req.json() to return sanitized req body

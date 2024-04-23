@@ -12,6 +12,7 @@ const getAll = async () => {
 }
 
 const update = async (id, params) => {
+  await db.connect()
   const user = await User.findById(id)
 
   if (!user) throw '用户不存在'
@@ -19,6 +20,8 @@ const update = async (id, params) => {
   Object.assign(user, params)
 
   await user.save()
+  await db.disconnect()
+  return user
 }
 
 const create = async params => {
@@ -36,6 +39,7 @@ const create = async params => {
 }
 
 const authenticate = async ({ email, password } = {}) => {
+  await db.connect()
   const user = await User.findOne({ email })
   if (!user) {
     throw '找不到此电子邮件的应用程序'
@@ -45,6 +49,7 @@ const authenticate = async ({ email, password } = {}) => {
     throw '电子邮件地址或密码不正确'
   }
   const token = createAccessToken({ id: user._id })
+  await db.disconnect()
   return {
     user: {
       name: user.name,
@@ -92,7 +97,7 @@ const getById = async id => {
   }
 }
 
-export const usersRepo = {
+export const userRepo = {
   create,
   authenticate,
   getAll,

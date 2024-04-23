@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server'
 import { setJson } from './set-json'
 
 export function errorHandler(error) {
-  if (typeof err === 'string') {
-    const is404 = err.toLowerCase().endsWith('not found')
+  if (typeof error === 'string') {
+    const is404 = error.toLowerCase().endsWith('not found')
     const status = is404 ? 404 : 400
-    return NextResponse.json(setJson({ message: err, code: status }), { status })
+    return NextResponse.json(setJson({ message: error, code: status }), { status })
   }
 
-  if (err.name === 'JsonWebTokenError') {
+  if (error.name === 'JsonWebTokenError') {
     return NextResponse.json(
       setJson({
         message: 'Unauthorized',
@@ -18,10 +18,9 @@ export function errorHandler(error) {
     )
   }
 
-  console.error(err)
   return NextResponse.json(
     setJson({
-      message: err.message,
+      message: error.message,
       code: '500',
     }),
     { status: 500 }

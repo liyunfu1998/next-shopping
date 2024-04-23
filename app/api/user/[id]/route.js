@@ -1,59 +1,38 @@
-import { NextResponse } from 'next/server'
+import z from 'zod'
 
-import db from '@/lib/db'
-import User from '@/models/User'
-import auth from '@/middleware/auth'
-import sendError from '@/utils/sendError'
+import { userRepo } from '@/helpers'
+import { apiHandler, setJson } from '@/helpers/api'
 
-const updateRole = auth(async (req, { params }) => {
-  try {
+const updateRole = apiHandler(
+  async (req, { params }) => {
     const { id } = params
     const { role } = await req.json()
-
-    const userRole = req.headers.get('userRole')
-    if (userRole !== 'admin') return sendError(400, '无权操作')
-
-    await db.connect()
-    await User.findOneAndUpdate({ _id: id }, { role })
-    await db.disconnect()
-
-    return NextResponse.json(
-      {
-        msg: '用户信息已成功更新',
-      },
-      {
-        status: 200,
-      }
-    )
-  } catch (error) {
-    return sendError(500, error.message)
+    await userRepo.updateRole(id, role)
+    return setJson({
+      message: '更新成功',
+    })
+  },
+  {
+    schema: z.object({
+      role: z.enum(['user', 'admin']),
+    }),
+    identity: 'root',
   }
-})
+)
 
-const deleteUser = auth(async (req, { params }) => {
-  try {
+const deleteUser = apiHandler(
+  async (req, { params }) => {
     const { id } = params
 
-    const role = req.headers.get('userRole')
-    const userRoot = req.headers.get('userRoot')
-    if (role !== 'admin' || !userRoot) return sendError(400, '无权操作')
-
-    await db.connect()
-    await User.findByIdAndDelete(id)
-    await db.disconnect()
-
-    return NextResponse.json(
-      {
-        msg: '用户信息已经删除',
-      },
-      {
-        status: 200,
-      }
-    )
-  } catch (error) {
-    return sendError(500, error.message)
+    await userRepo.delete(id)
+    return setJson({
+      message: '用户信息已经删除',
+    })
+  },
+  {
+    identity: 'root',
   }
-})
+)
 
 export const PATCH = updateRole
 export const DELETE = deleteUser

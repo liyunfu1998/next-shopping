@@ -11,6 +11,7 @@ async function connect() {
     connection.isConnected = mongoose.connections[0].readyState
     if (connection.isConnected === 1) {
       console.log('Use previous connection')
+
       return
     }
     await mongoose.disconnect()
@@ -26,7 +27,7 @@ async function connect() {
   }
 }
 
-async function discount() {
+async function disconnect() {
   if (connection.isConnected) {
     if (process.env.NODE_ENV === 'production') {
       await mongoose.disconnect()

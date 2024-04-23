@@ -1,10 +1,9 @@
 import { auth } from '@/helpers'
 
-async function jwtMiddleware(req) {
+export async function jwtMiddleware(req) {
   if (isPublicPath(req)) {
     return
   }
-
   const id = auth.verifyToken(req)
   req.headers.set('userId', id)
 }

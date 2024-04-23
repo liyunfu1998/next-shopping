@@ -15,6 +15,7 @@ export function apiHandler(handler, { identity, schema } = {}) {
       await validateMiddleware(req, schema)
 
       const responseBody = await handler(req, ...args)
+
       return NextResponse.json(responseBody || {})
     } catch (err) {
       console.log('global error handler', err)

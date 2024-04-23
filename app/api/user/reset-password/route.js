@@ -1,33 +1,23 @@
-import { NextResponse } from 'next/server'
+import z from 'zod'
 
-import db from '@/lib/db'
-import User from '@/models/User'
-import auth from '@/middleware/auth'
-import sendError from '@/utils/sendError'
-import bcrypt from 'bcrypt'
+import { userRepo } from '@/helpers'
+import { apiHandler, setJson } from '@/helpers/api'
 
-const resetPassword = auth(async (req, res) => {
-  try {
-    const { id: userId } = JSON.parse(req.headers.get('userinfo'))
+const resetPassword = apiHandler(
+  async (req, res) => {
+    const userId = req.headers.get('userId')
     const { password } = await req.json()
+    await userRepo.resetPassword(userId, password)
 
-    const hashPassword = await bcrypt.hash(password, 12)
-
-    await db.connect()
-    await User.findOneAndUpdate({ _id: userId }, { password: hashPassword })
-    await db.disconnect()
-
-    return NextResponse.json(
-      {
-        msg: '密码更新成功',
-      },
-      {
-        status: 200,
-      }
-    )
-  } catch (error) {
-    return sendError(500, error.message)
+    return setJson({
+      message: '密码更新成功',
+    })
+  },
+  {
+    schema: z.object({
+      password: z.string().min(6),
+    }),
   }
-})
+)
 
 export const PATCH = resetPassword

@@ -13,7 +13,7 @@ export default function auth(handler) {
       if (!decoded) sendError(400, 'token 无效！')
 
       db.connect()
-      const user = await Users.findOne({ _id: decoded.id })
+      // const user = await Users.findOne({ _id: decoded.id })
       db.disconnect()
       req.headers.set(
         'userInfo',
