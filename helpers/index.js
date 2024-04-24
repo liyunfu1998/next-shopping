@@ -1,3 +1,3 @@
 export * from './auth'
-export * from './db'
+export * from './repo/db'
 export * from './repo'

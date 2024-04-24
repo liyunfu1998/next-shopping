@@ -1,54 +1,39 @@
-import { NextResponse } from 'next/server'
+import z from 'zod'
+import { setJson, apiHandler } from '@/helpers/api'
+import { categoryRepo } from '@/helpers'
 
-import Category from '@/models/Category'
-import auth from '@/middleware/auth'
-import db from '@/lib/db'
-import sendError from '@/utils/sendError'
+const deleteCategory = apiHandler(async (req, { params }) => {
+  const { id } = params
+  await categoryRepo.delete(id)
 
-export const DELETE = auth(async (req, { params }) => {
-  try {
-    const { id } = params
-
-    await db.connect()
-    await Category.findByIdAndDelete(id)
-    await db.disconnect()
-
-    return NextResponse.json(
-      {
-        msg: '删除成功',
-      },
-      {
-        status: 200,
-      }
-    )
-  } catch (error) {
-    return sendError(500, error.message)
-  }
+  return setJson(
+    {
+      message: '删除分类成功',
+    },
+    {
+      isJwt: true,
+      identity: 'admin',
+    }
+  )
 })
 
-export const PUT = auth(async (req, { params }) => {
-  try {
+const updateCategory = apiHandler(
+  async (req, { params }) => {
     const { id } = params
     const { name } = await req.json()
-    await db.connect()
-    const newCategory = await Category.findByIdAndUpdate(
-      {
-        _id: id,
-      },
-      {
-        name,
-      }
-    )
-    await db.disconnect()
-    return NextResponse.json(
-      {
-        msg: '更新成功',
-      },
-      {
-        status: 200,
-      }
-    )
-  } catch (error) {
-    return sendError(500, error.message)
+    await categoryRepo.update(id, { name })
+    return setJson({
+      message: '更新成功',
+    })
+  },
+  {
+    isJwt: true,
+    identity: 'admin',
+    schema: z.object({
+      name: z.string(),
+    }),
   }
-})
+)
+
+export const DELETE = deleteCategory
+export const PUT = updateCategory

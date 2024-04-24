@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
 import { errorHandler, jwtMiddleware, validateMiddleware, identityMiddleware } from '@/helpers/api'
 
-export function apiHandler(handler, { identity, schema } = {}) {
+export function apiHandler(handler, { identity, schema, isJwt } = {}) {
   return async (req, ...args) => {
     try {
       const json = await req.json()
@@ -10,7 +10,7 @@ export function apiHandler(handler, { identity, schema } = {}) {
     } catch {}
 
     try {
-      await jwtMiddleware(req)
+      await jwtMiddleware(req, isJwt)
       await identityMiddleware(req, identity)
       await validateMiddleware(req, schema)
 

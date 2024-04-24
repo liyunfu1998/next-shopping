@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 
-import db from '@/lib/db'
+import db from './db'
 import User from '@/models/User'
 import { createAccessToken } from '@/utils/generateToken'
 
