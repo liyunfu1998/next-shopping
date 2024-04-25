@@ -1,95 +1,54 @@
-import { NextResponse } from 'next/server'
+import z from 'zod'
 
-import db from '@/lib/db'
-import Product from '@/models/Product'
-import auth from '@/middleware/auth'
-import sendError from '@/utils/sendError'
+import { setJson, apiHandler } from '@/helpers/api'
+import { productRepo } from '@/helpers'
 
-export const GET = async (req, { params }) => {
-  try {
-    const { id } = params
-
-    db.connect()
-    const product = await Product.findById(id)
-    db.disconnect()
-
-    if (!product) return sendError(500, '此产品不存在')
-
-    return NextResponse.json(
-      {
-        product,
-      },
-      {
-        status: 200,
-      }
-    )
-  } catch (error) {
-    sendError(res, 500, error.message)
-  }
-}
-
-export const PUT = auth(async (req, { params }) => {
-  try {
-    const { id } = params
-
-    const { title, price, inStock, description, content, category, images } = await req.json()
-
-    if (
-      !title ||
-      !price ||
-      !inStock ||
-      !description ||
-      !content ||
-      category === 'all' ||
-      images.length === 0
-    )
-      return sendError(400, '请填写所有字段')
-
-    await db.connect()
-    await Product.findByIdAndUpdate(
-      { _id: id },
-      {
-        title,
-        price,
-        inStock,
-        description,
-        content,
-        category,
-        images,
-      }
-    )
-    await db.disconnect()
-
-    return NextResponse.json(
-      {
-        msg: '产品更新成功',
-      },
-      {
-        status: 200,
-      }
-    )
-  } catch (error) {
-    return sendError(500, error.message)
-  }
+const getProduct = apiHandler(async (req, { params }) => {
+  const { id } = params
+  const result = await productRepo.getById(id)
+  return setJson({
+    data: result,
+  })
 })
 
-export const DELETE = auth(async (req, { params }) => {
-  try {
+const updateProduct = apiHandler(
+  async (req, { params }) => {
     const { id } = params
-
-    await db.connect()
-    await Product.findByIdAndDelete(id)
-    await db.disconnect()
-
-    return NextResponse.json(
-      {
-        msg: '产品已成功删除',
-      },
-      {
-        status: 200,
-      }
-    )
-  } catch (error) {
-    return sendError(500, error.message)
+    const body = await req.json()
+    await productRepo.update(id, body)
+    return setJson({
+      message: '更新产品成功',
+    })
+  },
+  {
+    isJwt: true,
+    identity: 'admin',
+    schema: z.object({
+      title: z.string(),
+      price: z.number(),
+      inStock: z.number(),
+      description: z.string(),
+      content: z.string(),
+      category: z.string(),
+      images: z.array(z.string()),
+    }),
   }
-})
+)
+
+const deleteProduct = apiHandler(
+  async (req, { params }) => {
+    const { id } = params
+    await productRepo.delete(id)
+    return setJson({
+      message: '删除产品成功',
+    })
+  },
+  {
+    isJwt: true,
+    identity: 'admin',
+  }
+)
+
+export const GET = getProduct
+export const PUT = updateProduct
+export const DELETE = deleteProduct

@@ -1,64 +1,41 @@
-import { NextResponse } from 'next/server'
+import z from 'zod'
 
-import Order from '@/models/Order'
-import auth from '@/middleware/auth'
-import db from '@/lib/db'
-import sendError from '@/utils/sendError'
+import { setJson, apiHandler } from '@/helpers/api'
+import { orderRepo } from '@/helpers'
 
-export const GET = auth(async req => {
-  try {
-    const userInfo = JSON.parse(req.headers.get('userInfo'))
-    let orders
-
-    if (userInfo.role !== 'admin') {
-      await db.connect()
-      // 查询所有user字段等于userInfo.id的订单文档，并且对每个订单文档中的user字段进行填充操作，但填充时排除password字段。
-      orders = await Order.find({ user: userInfo.id }).populate('user', '-password')
-    } else {
-      orders = await Order.find().populate('user', '-password')
-    }
-
-    return NextResponse.json(
-      {
-        orders,
-      },
-      {
-        status: 200,
-      }
-    )
-  } catch (error) {
-    return sendError(500, error.message)
-  }
-})
-
-export const POST = auth(async req => {
-  try {
-    const userInfo = JSON.parse(req.headers.get('userinfo'))
-
-    const { address, mobile, cart, total } = await req.json()
-    await db.connect()
-
-    const newOrder = new Order({
-      user: userInfo.id,
-      address,
-      mobile,
-      cart,
-      total,
+const getOrders = apiHandler(
+  async req => {
+    const userId = req.headers.get('userId')
+    const role = req.headers.get('userRole')
+    const result = await orderRepo.getAll(userId, role)
+    return setJson({
+      data: result,
     })
-
-    await newOrder.save()
-    await db.disconnect()
-
-    return NextResponse.json(
-      {
-        msg: '创建订单成功',
-        newOrder,
-      },
-      {
-        status: 200,
-      }
-    )
-  } catch (error) {
-    return sendError(500, error.message)
+  },
+  {
+    isJwt: true,
   }
-})
+)
+
+const createOrder = apiHandler(
+  async req => {
+    const userId = req.headers.get('userId')
+    const body = await req.json()
+    await orderRepo.create(userId, body)
+    return setJson({
+      message: '创建订单成功',
+    })
+  },
+  {
+    isJwt: true,
+    schema: z.object({
+      address: z.string(),
+      mobile: z.string(),
+      cart: z.array(z.string()),
+      total: z.number(),
+    }),
+  }
+)
+
+export const GET = getOrders
+export const POST = createOrder

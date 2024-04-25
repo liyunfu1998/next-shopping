@@ -1,4 +1,4 @@
-import db from './db'
+import { db } from '@/helpers'
 import Category from '@/models/Category'
 import Product from '@/models/Product'
 

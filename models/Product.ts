@@ -25,8 +25,8 @@ const productSchema = new mongoose.Schema(
       required: true,
     },
     category: {
-      type: String,
-      required: true,
+      type: mongoose.Types.ObjectId,
+      ref: 'category',
     },
     checked: {
       type: Boolean,

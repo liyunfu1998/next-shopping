@@ -1,8 +1,7 @@
 import bcrypt from 'bcrypt'
 
-import db from './db'
 import User from '@/models/User'
-import { createAccessToken } from '@/utils/generateToken'
+import { auth, db } from '@/helpers'
 
 const getAll = async () => {
   await db.connect()
@@ -48,7 +47,7 @@ const authenticate = async ({ email, password } = {}) => {
   if (!isMatch) {
     throw '电子邮件地址或密码不正确'
   }
-  const token = createAccessToken({ id: user._id })
+  const token = auth.createAccessToken({ id: user._id })
   await db.disconnect()
   return {
     user: {
