@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 import { BoxLink, Icons, Logout } from './index'
 
 export default function User() {
-  const { user } = useSelector(state => state.auth)
+  const { user } = useSelector(state => state.user)
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -47,7 +47,7 @@ export default function User() {
           className={` bg-white shadow-md rounded overflow-hidden absolute top-full left-0 w-60
                    border border-gray-100 ${isOpen ? 'block' : 'hidden'}`}
         >
-          <BoxLink path="/profile" name={user.name} className="border-t-0">
+          <BoxLink path="/profile" name={user.name}>
             <div className="realative w-6 h-6">
               <Image src={'/avatar.png'} alt="user" width={200} height={200} />
             </div>

@@ -6,13 +6,12 @@ import Image from 'next/image'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { toast } from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 
 import { usePostDataMutation } from '@/store/slices/fetchApiSlice'
 import { DisplayError, Loading } from '@/components'
-import { userLogin } from '@/store/slices/authSlice'
+import { userLogin } from '@/store/slices/userSlice'
 import alert, { confirmAlert } from '@/utils/alert'
 
 const schema = z.object({
@@ -45,9 +44,8 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isSuccess) {
-      //      toast.success(data.msg)
-      alert('success', data.msg)
-      dispatch(userLogin(data.data))
+      alert('success', data.message)
+      dispatch(userLogin(data.data.token))
       reset()
       router.push('/')
     }

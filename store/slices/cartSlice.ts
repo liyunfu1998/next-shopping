@@ -2,15 +2,15 @@ import { createSlice } from '@reduxjs/toolkit'
 import Cookies from 'js-cookie'
 
 const initialState = {
-  cartItems: Cookies.get('cartItems') ? JSON.parse(Cookies.get('cartItems')) : null,
+  cartItems: Cookies.get('cartItems') ? JSON.parse(Cookies.get('cartItems') || '') : null,
 }
 
 const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addToCart: (state, action) => {
-      const itemExist = state.cartItems.find(item => item._id === action.payload._id)
+    addToCart: (state: any, action: any) => {
+      const itemExist = state.cartItems.find((item: any) => item._id === action.payload._id)
 
       if (itemExist) {
         itemExist.quantity += 1
@@ -21,23 +21,23 @@ const cartSlice = createSlice({
       }
     },
 
-    removeFromCart: (state, action) => {
-      const index = state.cartItems.find(item => item._id === action.payload._id)
+    removeFromCart: (state: any, action: any) => {
+      const index = state.cartItems.find((item: any) => item._id === action.payload._id)
 
       if (index !== -1) {
         state.cartItems.splice(index, 1)
-        Cookies.set('cartItems'.JSON.stringify(state.cart))
+        Cookies.set('cartItems', JSON.stringify(state.cart))
       }
     },
 
     increase: (state, action) => {
-      state.cartItems.forEach(item => {
+      state.cartItems.forEach((item: any) => {
         if (item._id === action.payload._id) item.quantity += 1
       })
     },
 
     decrease: (state, action) => {
-      state.cartItems.forEach(item => {
+      state.cartItems.forEach((item: any) => {
         if (item._id === action.payload._id) item.quantity -= 1
       })
     },

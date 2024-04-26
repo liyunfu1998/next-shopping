@@ -8,6 +8,7 @@ const login = apiHandler(
     const result = await userRepo.authenticate(body)
     return setJson({
       data: result,
+      message: '登录成功',
     })
   },
   {

@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 
 import { usePostDataMutation } from '@/store/slices/fetchApiSlice'
-import { userLogin } from '@/store/slices/authSlice'
+import { userLogin } from '@/store/slices/userSlice'
 import { DisplayError, Loading } from '@/components'
 import alert, { confirmAlert } from '@/utils/alert'
 
